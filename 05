@@ -1,0 +1,138 @@
+5.1 print和import更多细节
+5.1.1 使用逗号输出
+print('hello'+',',a.b) 连续输出多个变量
+5.1.2 模块别名
+import a as b
+5.2 赋值技巧
+5.2.1 序列解包
+x,y,z = 1,2,3
+x,y = y,x 交换x和y的值
+以上序列解包或可选代解包
+values = 1,2,3
+x,y,z = values
+当一个函数返回元组(序列或者其他可迭代对象)时，比较有用
+key,value = d.popitem() 会返回一个元组，进行赋值
+a,b,rest* = [1,2,3,4]
+a 1 b 2 rest[3,4]
+5.2.2 链式赋值
+x = y = f()
+5.2.3 增量赋值
+i += 1 , i /= 2 标准运算符都适用
+5.3 语句块
+通过缩进可以创建语句库块
+aaaaaaaaaa
+bbbbbbbbbb:
+    cccccccc
+    ddddd
+    ee
+fffffff
+ggggggggg
+5.4 条件和条件语句
+5.4.1 布尔变量
+False None 0 "" () {} [] 会被视为假
+其他的都视为真
+bool(a) 可以将一个对象转换为布尔变量。Python可以隐式转换
+5.4.2 条件执行和if语句
+if a:
+    bbbbb
+5.4.3 else子句
+if a:
+    bbbb
+else:
+    cccc
+5.4.4 elif子句
+if a:
+    bbbbb
+elif c:
+    ddddd
+elif e:
+    fffff
+else g:
+    hhhhh
+5.4.5 嵌套代码块
+if a:
+    if b:
+        cccc
+    elif d:
+        eeee
+    else:
+        ffff
+else:
+    gggg
+5.4.6 复杂条件
+比较运算符 x==y,x<y,x!=y,x is y 判断是否是同一个对象,x in y x是y的成员
+比较运算符可以连续使用，0<age<100,与逻辑
+布尔运算符 and or not，启用短路逻辑，惰性求值
+5.4.7 断言
+a = -1
+assert 0<a<100,'123'
+断言报错，错误信息是123
+5.5 循环
+5.5.1 while循环
+while a:
+    b
+5.5.2 for循环
+for a in as:
+    bbbbbbb(a)
+内建范围函数 range(1,10,2) 参数使用类似分片规格
+5.5.3 循环遍历字典
+for k,v in d.items():    d.items()会将项作为元组返回
+    print(k,v)
+5.5.4 迭代工具
+并行迭代
+zip(names,ages) 会返回一个元组列表
+for n,a in zip(names,ages):
+             aaaaaaaaaaaaaaaaaa
+
+编号迭代
+enumerate(strings)提供索引，值对
+for index,string in enumerate(strings):
+        if 'xxx' in string:
+            strings[index] = '123'
+翻转和排序迭代
+sorted([4,3,6,8,3]) 会返回排序的结果，一个列表
+sorted('hello world') 会返回一个列表，['','','','','','','','','']
+list(reversed('hello world')) 返回一个列表
+''.join(reversed('hello world')) 翻转字符串
+5.5.5 跳出循环
+while a:结束循环
+    if b:
+        break
+
+while a:省略continue后面的语句，进入下一个循环
+    if b:
+        continue
+
+for n in range(99,81,-1):
+    root = sqrt(n)
+    if root == int(root):
+        print(n)
+        break
+else:
+    print('123')   如果break一次没有发生，会调用else下的语句
+
+5.6 列表推导式-轻量级循环
+[x*x for x in range(10)]
+[0,1,4,9,16,25,36,49,64,81]
+
+[x*x for x in range(10) if x%3==0]
+[0,9,36,81]
+
+[(x,y) fot x in range(3) for y in range(3)]
+[(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)]
+
+5.7 三人行
+5.7.1 pass
+pass 什么都不做。用于占位
+5.7.2 del
+x = 1
+del x
+再次调用x会报错。del清理了x，垃圾回收机制清理了x指向的值
+
+x = y = [1,2,3]
+del x
+调用x会报错  清理了x名，但是y还指向了[1,2,3]
+调用y正常
+5.7.3 exec和eval 执行和求值字符串
+exec("print('Hello world')") 执行语句，将文本形式的语句进行执行。需要放置文本注入和命名冲突
+eval("1 + 2 * 3")  7  eval会执行文本格式的Python表达式
