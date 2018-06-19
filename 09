@@ -1,0 +1,246 @@
+__name__  前后双下划线的是特殊方法，会被Python自动调用，编写时需要谨慎
+9.1 准备工作
+文件开头加入 __metaclass__ = type 是新式类
+class New(object): 是新式类
+class old: 旧式类
+3版本会默认为新式类
+9.2 构造方法
+创建对象时自动调用
+class FooBae:
+    def __init__(self):
+        self.var = 42
+9.2.1 重写一般方法和特殊的构造方法
+class A:
+    def __init__
+        s1
+    def f1:
+        s2
+class B(A):
+    def __init__
+        s3
+b = B()
+b.f1()  理论上说是可以调用的。但是f1中如果存在只在A中进行初始化的值时，则会报错
+        B初始化调用的是自己的构造函数，没有使用基类A的构造函数。
+        调用基类构造函数的未绑定版本或者使用super函数
+9.2.2 调用未绑定的超类构造方法
+推荐使用super方法。此方法是为了解决一些历史遗留问题。
+class A:
+    def __init__
+        s1
+    def f1:
+        s2
+class B(A):
+    def __init__
+        A.__init__(self)  直接调用类方法需要提供绑定的对象。此操作就是将本对象显式的提供给基类的构造函数。
+        s3
+9.2.3 super函数
+只能在新式类中使用
+class A:
+    def __init__
+        s1
+    def f1:
+        s2
+class B(A):
+    def __init__
+        super(B,self).__init__  即使继承了多个基类，一条语句初始化了所有基类
+        s3
+9.3 成员访问
+规则protocol，是对象需要遵守的标准集合。只要对象遵守了某一规则，那它就成为了规则规定的对象。
+例如，只要对象遵守了序列的规则，那它就成为了序列(序列规则规定的对象)
+其他语言中可能会要求你的对象要继承序列类才能成为序列。
+9.3.1 基本的序列规则和映射规则
+__len__(self) 对于序列来说，返回元素的数量；对于映射来说，则是键值对(项)的数量。
+              如果返回的是0(并且没有重写该行为的__nonzero__),对象会被视为布尔变量的假值
+__getItem__(self,key) 对于序列来说，提供一个0~n-1的整数；对于映射来说，可以提供任意键
+__setitem__(self,key,value) 仅对可修改对象提供该方法。实现存储键位key的value
+__delitem__(self,key) 仅对可修改对象提供该方法。需要调用del方法时，需要实现，同时删除key和value。
+                      也可能是并非删除全部的对象，而只删除一些需要删除的对象。
+附加要求
+对于序列来说，x[-n]与x[len(x)-n)是一样的。键为负数也要能够正确提供值。
+如果键是一个不合适的类型，会引发一个TypeError的异常
+序列索引是合法类型，但超出了范围，应引发IndexError异常
+9.3.2 子类化列表，字典和字符串
+如果按照标准自定义实现全部方法，工作量比较大，尤其是对只想修改部分功能时的情况。
+使用继承减少工作量
+class CounterList(list):
+    def __init__(self,*args):
+        super(CounterList,self).__init__(*args)
+    def __getitem__(self,index):
+        self.counter +=1
+        return super(CounterList,self).__getitem__(index)
+CounterList严重依赖于超类行为。构造函数中使用了超类的构造函数。另一个重写方法中使用了超类的方法返回结果。
+9.4 更多的特殊方法
+使用手册
+9.5 属性
+访问器方法，属性的set,get方法。重写或者实现比较繁琐，特别是属性特别多的时候。
+9.5.1 property函数
+class A:
+    def __init__(self):
+        s1
+    def setSize(self,size):
+        s2
+    def getSize(self):
+        s3
+    size = property(getSize,setSize)
+
+a = A()
+a.width = 5
+a.height = 10
+a.size    (5,10)  根据s3给出结果
+a.size = (1,2)  根据s2给出结果
+property对多可以接受4个参数，按顺序分别是fget,fset,fdel,doc__
+新式类中应该使用property函数而不是访问器方法
+9.5.2 静态方法和类成员方法
+静态方法和类成员方法分别被装入Staticmethod和Classmethod
+静态方法顶底中没有self参数，而且能被类本身直接调用。
+类成员方法在定义时需要名为cls类似self的参数，类成员方法可以直接用类的具体对象调用，但cls是自动绑定到类的。
+class A:
+    def smeth():   静态方法
+        s1
+    smeth = staticmethod(smeth)
+
+    def cmeth(cls): 类成员方法
+        s2
+    cmeth = classmethod(cmeth)
+Python中引用了装饰器的新语法，使用了@操作符。
+class A:
+    @staticmethod
+    def smeth():   静态方法
+        s1
+
+    @classmethod
+    def cmeth(cls): 类成员方法
+        s2
+A.smeth()
+A.cmeth()
+9.5.3  __getattr__,__setattr和它的朋友们
+__getattribute__(self,name)  特性name被调用时自动调用，新式类中可用
+__getattr_(self,name) 特性name被访问且对象没有相应的特性时被调用
+__setattr__(self,name,value) 给特性name赋值时会被自动调用
+__delattr__(self,name) 试图删除特性name时被调用
+9.6 迭代器
+9.6.1 迭代器规则
+__iter__  方法返回一个迭代器。迭代器有__next__方法。调用next(it)方法会返回下一个值。
+迭代器相比列表，不用指定大小，节省内存，使用简单
+it = iter([1,2,3])  使用内建函数iter可以获得可迭代对象的迭代器
+it.next   1
+it.next   2
+
+9.6.2 从迭代器获得序列
+可迭代对象可以转换为序列
+class A:
+    value = 0
+    def next(self):
+
+    def __iter__(self):
+
+a = A()
+list(a)
+9.7 生成器
+生成器是用一种普通的函数语法定义的迭代器。
+9.7.1 创建生成器
+nested = [[1,2],[3,4],[5]]
+def flatter(nester):
+    for sublist in nester:
+        for sub in sublist:
+            yield element
+要输出列表中所有单个元素
+任何包含yield语句的函数成为生成器。return是一次性返回所有值。yield每次返回一个值，冻结，保存现场，等待下一次调用。
+for num in flatter(nested):
+    print(num)
+
+list(flatter(nested))
+9.7.2 递归生成器
+如果不清楚需要基层for循环，这是需要寻求递归
+def flatten(nested):
+    try:
+        for sublist in nester:
+            for element in flatten(sublist):
+                yield element
+    except:
+        yield nested
+递归一般处理两种情况，基本情况和需要递归的情况
+基本情况，展开一个元素，触发TypeError异常，这时只返回一个元素
+需要递归情况，递归调用flatten
+如果nested是一个类似字符串的对象，那就是一个序列，不会引发TypeError，但是不应该对这样的对象进行迭代。
+两个原因，字符串本身应该视为原子值；字符串的第一个元素是两一个长度为1的字符串，而长度为1的字符串的第一个元素是字符串本身，导致无穷递归。
+需要对传入的类型进行一个判断
+比如这样
+try:nested + ''
+except TypeError:pass   不是字符串，触发异常，什么都不做
+else:raise TypeError   是字符串，主动发出异常
+这样的检查没有使用if/else进行实例判断，而是通过对象的特点会引发的异常进行一个判断
+
+9.7.3 通用生成器
+生成器包含两个方面，函数和迭代器。函数由def定义，包含yield部分。迭代器是这个函数返回的部分。
+def f()
+    yield 1
+f 函数
+F() 迭代器
+
+9.7.4 生成器方法
+生成器的新特点是在开始运行后为生成器提供值的能力。
+可以在外部访问send方法，提供一个参数
+内部挂起生成器，yield作为表达式使用
+send方法要在yield运行一次后才有意义。
+def f(v):
+    while v<20:
+        new =(yield v)
+        if v<20:
+            v += 1
+        if new is not None:v = new
+a = f(1)
+a.__next__() 每次调用都会+1，到20之后就不在改变
+a.send(4)  v改成了4，重新开始+1
+生成器还有两个其他方法
+throw方法，用于在生成器引发一个异常
+close方法，用于停止生成器
+9.7.5 模拟生成器
+旧版本使用
+9.8 八皇后问题
+使用生成器解决
+9.8.1 生成器和回溯
+生成器是逐渐产生结果的复杂递归算法的实现工具。
+没有生成器，需要传递额外的参数。使用生成器，所有递归调用只要创建yield部分即可。
+如果无法知道循环嵌套的层数，可以借助于递归
+9.8.2 问题
+一个棋盘上要放置8个皇后，皇后之间不能形成威胁。有多少种摆法？
+回溯问题，先放第一个，在放第二个，以此类推，如果放不下，回溯上一步吗，尝试其他位置。
+可以拓展到n皇后问题
+9.8.3 状态表示
+使用列表表示棋盘状态。state[0] = 3 表示第一列第四行有一个皇后。
+在递归的某一层，只能知道上一层的状态，因此需要一个长度小于8的状态列表。
+9.8.4 寻找冲突
+定义一个函数，判定当前状态和下一个皇后位置是否冲突。
+def conflict(state,nextX):
+    nextY = len(state)
+    for i in range(nextY):
+        if abs(state[i] - nextX) in (0,nextY - i): #0代表水平冲突，nextY - i 代表对角线冲突
+            return True
+    return False
+同样的水平线或者对角线就会发生冲突
+
+9.8.5 基本情况
+基本情况是指需要返回的情况。只剩下最后一个皇后，如何给出摆放结果。
+def queens(num,state):
+    if len(state) == num - 1:  #只剩下最后一个皇后
+        for pos in range(num): #遍历所有位置
+            if not conflict(state,pos): #找的符合条件的位置
+                yield pos
+9.8.6 需要递归的情况
+def queens(num=8,state=()):
+    for pos in range(num):
+        if not conflict(state,pos):如果不冲突
+            if len(state) == num - 1: #最后一个皇后
+                yield (pos,)
+            else:
+                for result in queens(num,state +（pos,)):#当前不冲突，而且并不是最后一个皇后，递归找下一个位置
+                    yield (pos,) + result
+9.8.7 打包
+将输出转化为更合适的结构更好理解
+def prettyprint(s):
+    def line(pos,length = len(s)):
+        return '.'*(pos) + 'X' + '.'*(length-pos-1)
+    for pos in s:
+        print(line(pos))
+
