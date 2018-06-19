@@ -1,0 +1,93 @@
+3.1 基本字符串操作
+索引，分片，乘法，成员自资格判断，长度，最大值，最小值对字符串适用
+字符串是不可变的，所以直接赋值是会报错的
+3.3 字符串格式化 完整版
+如果右操作数是元组，则其中的每一个元素都会被单独格式化，每一个值都需要对应一个转换说明符
+%s plus %s equals %s (1,1,2) 1 plus 1 equals 2
+
+%字符 转换说明符开始
+print("aaaaaa $d" %(12))  aaaaaa 12
+print("aaaaaa $ d" %(12))  aaaaaa  12  % d 表示保留一个空格  %+d %-d 转换之前加上正负号
+最小字段宽度，可选
+%f.f  点号后面是精度
+d,i 带符号十进制整数 f.f 十进制浮点数 C 单字符 r 字符串 repr转换 s字符串 str转换
+3.3.1 简单转换
+'price of eggs: $%d' %42,'price of eggs: $%d' %42
+('price of eggs: $42','price of eggs: $42')
+
+'aaaa %d  bbbb   %d' %(4,5) 需要加括号，否则提示参数不足
+'aaaa f  bbbb   5'
+
+3.3.2 字段宽度和精度
+'%10f' %pi  整个长度有10位，浮点数
+'%10.2f' %pi 长度10，浮点数，2位精度
+'%.2f' %pi 长度默认，浮点数，2位精度
+'%.5s' %'Guido van Rossum' 'Guido' 5位精度
+'%*.*s' %(15,5,'Guido van Rossum') '       Guido'  整个长度15位，5位精度，字符串
+
+3.3.3 符号，对齐和0填充
+'%010.2f' %pi  '0000003.14' 0 1 0 . 2 f 用0填充空位，总共10位，2位精度，浮点数
+'%-10.2f' %pi  '3.14      ' -表示左对齐
+('% 5d' % 10)+('% 5d' % -10)   '   10    -10'  正数前面加空格，负数前面不加，是应对齐
+('%+5d' % 10)+('%+5d' % -10)   '  +10    -10'  所有数都显示正负号
+
+3.4 字符串方法
+3.4.1 find
+s = 'abc  cc ddf d'
+s.find('cc') 返回子串所在位置起始位置，找不到返回-1
+s.find('cc'，0,5) 指定起始结束位置 左闭右开
+
+3.4.2 join
+'abc'.join('def') 'dabceabcf'
+
+3.4.3 lower
+'ABc'.lower() 'abc'
+
+3.4.4 replace
+'AAccAA'.replace('AA','B') 'BccB'
+
+3.4.5 split
+'+12+3+4+5'.split('+')  ['1','2','3','4','5']
+join的逆方法，将字符串变回列表
+
+3.4.6 strip
+'        abc  '.strip()   'abc'  去掉两侧的空格
+3.4.7 translate
+translate将单个字符替换，效率比replace高，使用复杂。
+需要提供一个转换表
+from string import maketrans
+table = maketrans('cs','kz') c换成k，s换成z
+table和maketrans('','')比较会发现c换成k，s换成z
+'asdfasdfasdfasdf'.translate(table,'') 会返回结果,第二个参数表示要删除的字符
+
+translate有时会用来处理一些非英文字符做标准转换有问题的情况
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
