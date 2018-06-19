@@ -1,0 +1,87 @@
+8.1 异常定义
+Python中常用异常对象来表示异常情况。遇到错误，触发异常，异常没有处理或者捕捉，会用回溯Traceback中止执行
+异常时一些类的实例，引发之后可以用多种方法捕捉，并进一步进行处理，以免程序失败。
+
+8.2 自定义异常
+8.2.1 raise
+raise Exception 引发一个没有任何错误信息的异常
+raise Exception('123123123')  已发了一个异常，并带有提示信息
+import exceptions
+dir(exceptions) 查看内建异常
+Exception是所有异常基类
+8.2.2 自定义异常类
+class MyException(Exception):pass
+与普通类定义一致
+8.3 异常捕捉
+try:
+    s1
+    s2
+    s3
+except ZeroDivisionError:捕获到特定的异常，除零异常
+    s5
+如果没捕获异常，异常会传播到调用的函数中，会浮到最顶层。
+如果捕获了异常,使用了raise，会传递捕获到的异常
+try:
+    1/0
+except ZeroDivisionError:
+    print("123")                输出 123
+
+
+try:
+    1/0
+except ZeroDivisionError:       输出  ZeroDivisionError
+    raise
+8.4 多个except子句
+可以针对不同的异常进行处理
+try:
+    s1
+except E1:
+    s2
+except E2:
+    s3
+except E3:
+    s4
+except E4:
+    s5
+
+8.5 一次捕捉两个异常
+try:
+    s1
+except(E1,E2):
+    s2
+8.6 捕捉对象
+可以获取捕捉到对象的实例，并加以利用
+try:
+    s1
+except(E1,E2) as e
+    print(e)
+8.7 全捕捉
+try:
+    1/0
+except Exception as e:    Exception是所有异常的基类，这样可以查看异常信息
+    print(e)
+
+try:
+    1/0
+except:          能捕获所有异常，但是比较危险。Ctrl+C也会被捕捉到，或者捕捉到系统终止运行的企图
+    print('123')
+
+8.8 万事大吉
+while True:
+    try:
+        s1
+    except:  触发异常会执行的语句
+        s2
+    else:    如果没有触发异常会执行的语句
+        s3
+8.9 finally
+try:
+    s1
+finally:     finally下的语句一定会执行，无论异常是否触发。一般用于释放被占用的资源。
+    s2
+8.10 异常和函数
+异常如果不处理会逐渐浮到最上层调用，导致堆栈跟踪。
+8.11 异常之禅
+if/else 可以做事前检查，但是效率会低一些
+try/except 并不是每次都执行，效率会高一些。有一个原则是尽量处理可能异常，而不是花时间进行大量检查。归结为看前就跳。
+
