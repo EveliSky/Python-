@@ -1,0 +1,45 @@
+通过使用名字来引用直，称为映射。字典是唯一内建映射类型。
+4.2 字典的创建和使用
+phonebook = {'Alice':'2341','Beth':'9102','Cecil':'3258'}
+键值对也成为项。空字典 {}
+4.2.1 dict函数
+items = [('name','Gumby'),('age','42')]
+d = dict(items)
+d['name']   'Gumby'
+
+d = dict(name='Gumby',age=52)  {'name':'Gumby','age':42}
+4.2.2 字典基本操作
+len(d) 返回d中项的数量
+d[k] 返回k键的值
+d[k] = v k键的值变为v
+del d[k] 删除k键及值
+k in d 检查d中是否有k键
+键类型：可以使不可变类型，字符，数字
+自动添加：分配一个值和一个并不存在的键，可以建立新项
+成员资格：k in d 检查的是键。列表中检查的是值，而不是索引index
+x = {}
+x[42] = 'Foobar'
+x  {42:''Foobar'}
+
+4.2.3 字典的格式化字符串
+phonebook = {'Alice':'2341','Beth':'9102','Cecil':'3258'}
+'Cecil's phone number is %(Cecil)s.' % phonebook   %(键)
+Cecil's phone number is 3258
+
+4.2.4 字典方法
+d.clear() 原位置操作，清空字典，无返回值
+y = x.copy() 浅复制，y获得x的副本，修改y不影响x，但是修改y项的值，会影响x。因为x和y的值指向同一个对象。
+y = deepcopy(x) 深复制，值也被复制了一遍
+dict.fromkeys(['name','age'])   {'name':None,'age':None} 创建只有键的字典
+dict.fromkeys(['name','age']).'(123)'   {'name':'(123)' ,'age':'(123)' } 自己提供默认值
+d.get('name'，’123‘) 如果没有name这个键，会返回自定义值’123‘，如果有会返回对应的值。直接访问不存在的键会报错。
+d.items() 会以列表的形式返回字典内容，每一项会成为一个元组 [(),(),()]
+d.iteritems() 会返回一个迭代器对象
+d.keys() 将字典中的键以列表返回
+d.iterkeys() 将字典中的键以迭代器对象返回
+d.pop(键) 会删除键对应的项
+d.popitem() 会随机以元组返回一个项，并在原字典中进行删除。类似列表的list的pop，但是字典没有明显的顺序
+d.setdefault('name','N/A') 如果有这个键，以字典的形式返回这一项，否则会添加这一项，第二个参数是添加的值
+d.update(x) x也是字典，update会将d中与x相同键的值替换为x的值，不含x键的话会根据x创建新项
+d.values() 所有值以列表形式返回
+d.itervalues() 返回包含所有值的迭代器
