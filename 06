@@ -1,0 +1,99 @@
+6.1 懒惰即美德
+代码要重复利用；经过抽象，简化代码，重复利用已经编写好的代码
+6.2 抽象和结构
+经过抽象只留下做法，实现细节都被整合到函数定义中
+6.3 创建函数
+def hello(name):
+    return 'Hello,'+name+'!';
+def fibs(num):
+    result = [0,1]
+    for i in range(num-2):
+        result.append(result[-2] + result[-1])
+    return result
+
+6.3.1 记录函数
+文档字符串,描述函数
+def square(x):
+    '计算平方'
+    return x*x
+square.__doc__    '计算平方'
+help(square) 会调用文档字符串
+
+6.3.2 非真正函数的函数
+不显式的指定返回则默认返回None
+6.4 参数
+6.4.1 值的来源
+一般来说保证函数在可接受的参数范围内可以正常工作即可。
+为了增强健壮性，也会有一些方法对参数进行验证。
+6.4.2 改变参数
+一般参数只在局部作用域内生效，不会影响作用域外
+在传入列表时要注意，由于参数和作用域外变量指向的是同一个对象，任意一个进行修改，都会影响另一个。
+为了避免这种情况，要对传入参数进行复制操作。
+修改参数的情况，比如建立一个数据库，要对数据库进行更新插入操作。数据库作为参数，必须要修改。
+如果传入了不可修改的参数，比如数字，元组，要么保证返回足够的信息，要么改造参数为可修改的参数，比如列表。
+6.4.3 关键字参数和默认值
+之前都是参数位置要比参数名称要重要，传入参数必须按照顺序传入。但是有时参数太多，不好记忆。
+def hello(name,greeting):
+    return 'hello'
+hello(greeting='332',name='123')使用时参数名称选对即可，这样叫关键字参数
+def hello(name='Tom',greeting='good'):提供默认值，如果没有传入参数使用默认值
+    return 'hello'
+6.4.4 收集参数
+def print_params(*params):不限制传入参数的长度
+    return params
+print_params（1,2,3)   (1,2,3)
+与普通参数同时使用时，收集参数会盛放剩余的参数，但是不能直接指定收集参数
+def print_params_3(**params):
+    print(params)
+print_params_3(x=1,y=2,z=3)  {'z':'3','x':'1','y':'2'} 收集参数当做关键字参数使用会产生字典
+
+def print_params_4(x,y,z=3,*pospar,**keypar):全都聚合在一起
+    print(x,y,z)
+    print(pospar)
+    print(keypar)
+print_params_4(1,2,3,5,6,7,foo=1,bar=2)
+1,2,3
+(5,6,7)
+{'foo':1,'bar':2}
+6.4.5 反转过程
+def add(x,y): return x+y
+params = (1,2)
+add(*params) 3 虽然值传递了一个参数，但是可正常使用,需要关注参数位置
+hello3(name=none,greeting=none)
+params = {'name':'sir Robin','greeting':'well met'}
+hello3(**params) 可以正常传入参数，不需要关注参数位置
+
+6.5 作用域
+内建函数vars()可以返回当前作用域内的变量名称和变量值对的字典
+这个匿名字典可以称之为命名空降或者作用域
+触乐全局作用域，每调用一次函数就会创建一个新的作用域
+局部作用域使用全局函数
+globals()['x'] x是全局变量名称 或者使用global x 声明引用外部x
+
+6.6 递归
+函数可以调用别的函数，也可以调用自身
+6.6.1 阶乘和幂
+def factorial(n):
+    if n==1:
+        return 1;
+    else:
+        return n*factorial(n-1)
+def power(x,n):
+    if n==0:
+        return 1
+    else:
+        return x*power(x,n-1)
+递归更加已读，可以用循环代替
+6.6.2 二分查找
+def search(sequence,number,lower,upper):
+    if lower == upper:
+        assert number == sequence[upper]
+        return upper
+    else:
+        middle = (lower+upper)//2
+        if number > sequence[middle]
+            return search(sequence,number,middle+1,upper)
+        else:
+            return search(sequence,number,lower,middle)
+
+
